@@ -1,7 +1,11 @@
-use rltk::{ RGB, Rltk, Console, DistanceAlg, RandomNumberGenerator, BaseMap, Algorithm2D, Point };
+use rltk::{ RGB, Rltk, Console, RandomNumberGenerator, BaseMap, Algorithm2D, Point };
 use super::{Rect};
 use std::cmp::{max, min};
 use specs::prelude::*;
+
+const MAPWIDTH : usize = 33;
+const MAPHEIGHT : usize = 21;
+const MAPCOUNT : usize = MAPHEIGHT * MAPWIDTH;
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum TileType {
@@ -56,12 +60,12 @@ impl Map {
     /// look awful.
     pub fn new_map_test() -> Map {
         let mut map = Map{
-            tiles : vec![TileType::Wall; 40*25],
+            tiles : vec![TileType::Wall; MAPCOUNT],
             rooms : Vec::new(),
-            width : 40,
-            height: 25,
-            revealed_tiles : vec![false; 40*25],
-            visible_tiles : vec![false; 40*25]
+            width : MAPWIDTH as i32,
+            height: MAPHEIGHT as i32,
+            revealed_tiles : vec![false; MAPCOUNT],
+            visible_tiles : vec![false; MAPCOUNT]
         };
         // Make the boundaries walls
         let boundaries = Rect::new(0, 0, map.width-2, map.height-2);
@@ -83,15 +87,14 @@ impl Map {
         map
     }
 
-
     pub fn new_map_rooms_and_corridors() -> Map {
         let mut map = Map{
-            tiles : vec![TileType::Wall; 40*25],
+            tiles : vec![TileType::Wall; MAPCOUNT],
             rooms : Vec::new(),
-            width : 40,
-            height: 25,
-            revealed_tiles : vec![false; 40*25],
-            visible_tiles : vec![false; 40*25]
+            width : MAPWIDTH as i32,
+            height: MAPHEIGHT as i32,
+            revealed_tiles : vec![false; MAPCOUNT],
+            visible_tiles : vec![false; MAPCOUNT]
         };
 
         const MAX_ROOMS : i32 = 15;
@@ -103,8 +106,8 @@ impl Map {
         for _i in 0..MAX_ROOMS {
             let w = rng.range(MIN_SIZE, MAX_SIZE);
             let h = rng.range(MIN_SIZE, MAX_SIZE);
-            let x = rng.range(1, map.width - w - 2);
-            let y = rng.range(1, map.height - h - 2);
+            let x = rng.range(7, map.width - w - 2);
+            let y = rng.range(7, map.height - h - 2);
             let new_room = Rect::new(x, y, w, h);
             let mut ok = true;
             for other_room in map.rooms.iter() {
@@ -207,11 +210,11 @@ pub fn draw_map(ecs: &World, ctx : &mut Rltk) {
             match tile {
                 TileType::Floor => {
                     glyph = 239;
-                    fg = RGB::from_u8(79, 37, 1);
+                    fg = RGB::from_u8(120, 80, 40);
                 }
                 TileType::Wall => {
                     glyph = wall_glyph(&*map, x, y);
-                    fg = RGB::from_u8(79, 10, 1);
+                    fg = RGB::from_u8(120, 50, 40);
                 }
             }
             if !map.visible_tiles[idx] { fg = fg.to_greyscale() }

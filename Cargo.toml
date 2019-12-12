@@ -1,5 +1,5 @@
 [package]
-name = "hellorust"
+name = "orbis-arcanus"
 version = "0.1.0"
 authors = ["delamorte <dellamorte@disroot.org>"]
 edition = "2018"

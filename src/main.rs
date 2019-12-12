@@ -4,6 +4,7 @@ use specs::prelude::*;
 extern crate specs_derive;
 mod components;
 pub use components::*;
+mod gui;
 mod map;
 pub use map::*;
 mod player;
@@ -33,7 +34,7 @@ impl State {
 impl GameState for State {
     fn tick(&mut self, ctx : &mut Rltk) {
         ctx.cls();
-        
+    
         player_input(self, ctx);
         self.run_systems();
 
@@ -45,7 +46,10 @@ impl GameState for State {
         for (pos, render) in (&positions, &renderables).join() {
             ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
         }
-        
+        ctx.set_active_console(1);
+        ctx.cls();
+        gui::draw_ui(&self.ecs, ctx, WIDTH, HEIGHT);
+        ctx.set_active_console(0);
     }
 }
 
@@ -57,13 +61,15 @@ fn main() {
         HEIGHT as u32 * 48,
         "Orbis Arcanus",
     );
-
-
+    context.with_post_scanlines(false);
     let font = context.register_font(rltk::Font::load("resources/orbis_rust.png", (16, 24)));
-/*     context.register_console(
-        rltk::SparseConsole::init(WIDTH as u32, HEIGHT as u32, &context.backend), font,); */
+
     context.register_console_no_bg(
         rltk::SparseConsole::init(WIDTH as u32, HEIGHT as u32, &context.backend), font,);
+
+    let ui_font = context.register_font(rltk::Font::load("resources/vga8x16.png", (8, 16)));
+
+    context.register_console(rltk::SparseConsole::init(WIDTH as u32, HEIGHT as u32, &context.backend), ui_font);
 
 
     let mut gs = State {
