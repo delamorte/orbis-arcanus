@@ -1,5 +1,5 @@
 use rltk::{ RGB, Rltk, Console, DistanceAlg, RandomNumberGenerator, BaseMap, Algorithm2D, Point };
-use super::{Rect, Position, Player};
+use super::{Rect};
 use std::cmp::{max, min};
 use specs::prelude::*;
 
