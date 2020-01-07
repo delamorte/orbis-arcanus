@@ -3,8 +3,8 @@ use super::{Rect};
 use std::cmp::{max, min};
 use specs::prelude::*;
 
-const MAPWIDTH : usize = 33;
-const MAPHEIGHT : usize = 21;
+const MAPWIDTH : usize = 50;
+const MAPHEIGHT : usize = 50;
 const MAPCOUNT : usize = MAPHEIGHT * MAPWIDTH;
 
 #[derive(PartialEq, Copy, Clone)]
@@ -107,7 +107,7 @@ impl Map {
             let w = rng.range(MIN_SIZE, MAX_SIZE);
             let h = rng.range(MIN_SIZE, MAX_SIZE);
             let x = rng.range(7, map.width - w - 2);
-            let y = rng.range(7, map.height - h - 2);
+            let y = rng.range(1, map.height - h - 2);
             let new_room = Rect::new(x, y, w, h);
             let mut ok = true;
             for other_room in map.rooms.iter() {

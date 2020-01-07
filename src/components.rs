@@ -1,5 +1,6 @@
 use specs::prelude::*;
 use rltk::{RGB};
+use serde::{Serialize, Deserialize};
 
 #[derive(Component)]
 pub struct Position {
@@ -12,6 +13,7 @@ pub struct Renderable {
     pub glyph: u8,
     pub fg: RGB,
     pub bg: RGB,
+    pub render_order : i32
 }
 
 #[derive(Component, Debug)]
@@ -24,3 +26,9 @@ pub struct Viewshed {
     pub dirty : bool
 
 }
+
+#[derive(Component, Debug, Serialize, Deserialize, Clone)]
+pub struct Hidden {}
+
+#[derive(Component, Debug)]
+pub struct Monster {}

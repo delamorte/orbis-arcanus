@@ -1,5 +1,6 @@
 use rltk::{ RGB, Rltk, Console };
 use specs::prelude::*;
+use super::{Player, gamelog::GameLog, Map, Position};
 
 pub fn draw_hollow_box(
     console: &mut Rltk,
@@ -32,14 +33,22 @@ pub fn draw_ui(ecs: &World, ctx : &mut Rltk, w : i32, h : i32) {
     let black = RGB::named(rltk::BLACK);
 
     draw_hollow_box(ctx, 0, 0, w-1, h-1, box_color, black); // Overall box
-    draw_hollow_box(ctx, 6, 0, w-7, h-5, box_color, black); // Map box
-    draw_hollow_box(ctx, 0, h-5, w-1, 4, box_color, black); // Log box
-    draw_hollow_box(ctx, 0, 0, 6, 4, box_color, black); // Top-left panel
+    draw_hollow_box(ctx, 6*2, 0, w-7*2+1, h-5*2, box_color, black); // Map box
+    draw_hollow_box(ctx, 0, h-5*2, w-1, 4*2+1, box_color, black); // Log box
+    draw_hollow_box(ctx, 0, 0, 6*2, 4*2, box_color, black); // Top-left panel
 
-    ctx.set(0, h-5, box_color, black, to_cp437('├'));
-    ctx.set(0, 4, box_color, black, to_cp437('├'));
-    ctx.set(6, 0, box_color, black, to_cp437('┬'));
-    ctx.set(6, h-5, box_color, black, to_cp437('┴'));
-    ctx.set(6, 4, box_color, black, to_cp437('┤'));
-    ctx.set(w-1, h-5, box_color, black, to_cp437('┤'));
+    ctx.set(0, h-5*2, box_color, black, to_cp437('├'));
+    ctx.set(0, 4*2, box_color, black, to_cp437('├'));
+    ctx.set(6*2, 0, box_color, black, to_cp437('┬'));
+    ctx.set(6*2, h-5*2, box_color, black, to_cp437('┴'));
+    ctx.set(6*2, 4*2, box_color, black, to_cp437('┤'));
+    ctx.set(w-1, h-5*2, box_color, black, to_cp437('┤'));
+
+    let log = ecs.fetch::<GameLog>();
+
+    let mut y = h-9;
+    for s in log.entries.iter() {
+        if y < h-1 { ctx.print(2, y, &s.to_string()); }
+        y += 1;
+}
 }
